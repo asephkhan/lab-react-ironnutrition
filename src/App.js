@@ -1,41 +1,31 @@
-import foodsData from './foods.json';
+import { useState } from 'react';
+import FoodBox from './components/Foodbox.jsx';
 import './App.css';
-import React, { useState } from 'react';
-import FoodBox from './Components/FoodBox/FoodBox';
-import FoodForm from './Components/FoodForm/FoodForm';
-import Search from './Components/Search/search';
+import foods from './foods.json';
+import {Row} from 'antd';
+import AddFoodForm from './components/AddFoodForm.jsx';
 
 function App() {
-  const [foods, setFoods] = useState(foodsData);
-  const [displayFood, setDisplayFood] = useState(foodsData)
+  const [food, setFood] = useState(foods);
 
-  const addNewDish = (newDish) => {
-    const updatedFoodList = [...foods, newDish];
-    setFoods(updatedFoodList);
-    setDisplayFood(updatedFoodList);
-  };
+  // function to add a new dish
+  // this function will be passed to the AddFoodForm to create a new dish
+  const addNewDish = (dish) => {
+    const updatedFoodArray = [...food, dish];
 
-  const searchFilter = (searchQuery) => {
-    let filteredFood = foods.filter((dish) =>
-    dish.name.toLowerCase().startsWith(searchQuery.toLowerCase())
-    );
-    setDisplayFood(filteredFood);
-  };
+    setFood(updatedFoodArray);
+  }
 
-const deleteFood = (dishName) => {
-  const filteredDish = foods.filter((dish) => {
-    return dish.name !== dishName;
-  });
-  setDisplayFood(filteredDish);
-};
   return (
     <div className="App">
-      <h3>Food Items</h3>
-      <Search search={searchFilter} />
-      <FoodForm addDish={addNewDish} /> 
-      {displayFood.map((dish) => {
-        return <FoodBox dish={dish} clickToDelete={deleteFood} />;
+      <h1>Food List</h1>
+      <AddFoodForm addDish={addNewDish}/>
+      <Row>
+      {food.map((dish) => {
+        return <FoodBox dish={dish} />;
       })}
+      </Row>
+     
     </div>
   );
 }
